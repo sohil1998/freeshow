@@ -11,13 +11,23 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 
 export default function Home(props: any) {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
+    getData();
+    return () => {
+      null;
+    };
+  }, []);
+
+  const getData = () => {
+    setIsLoading(true);
     const requestOptions = {
       method: "GET",
     };
@@ -27,12 +37,13 @@ export default function Home(props: any) {
       .then((result) => {
         setData(result);
         console.log(result);
+        setIsLoading(false);
       })
-      .catch((error) => console.error(error));
-    return () => {
-      null;
-    };
-  }, []);
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+  };
 
   const renderFileItem = ({ item }) => {
     return (
@@ -61,6 +72,16 @@ export default function Home(props: any) {
     <SafeAreaView style={{ backgroundColor: "#282828", flex: 1 }}>
       <StatusBar animated={true} barStyle="light-content" />
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => {
+              setIsLoading(true);
+              getData();
+            }}
+            enabled
+          />
+        }
         data={data}
         renderItem={renderFileItem}
         keyExtractor={(item) => `${item._id}`}
