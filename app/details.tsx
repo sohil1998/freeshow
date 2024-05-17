@@ -4,14 +4,30 @@ import {
   verticalScale,
 } from "@/constants/size";
 import React from "react";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 
 export default function Details(props: any) {
-  const renderFileItem = () => {
+  const params = useLocalSearchParams();
+  console.log(params.episodes?.toString()?.split(","));
+  const data = params.episodes?.toString()?.split(",");
+  const renderFileItem = ({ item, index }) => {
     return (
-      <Link href="/video" asChild>
+      <Link
+        href={{
+          pathname: "/video",
+          params: { url: item },
+        }}
+        asChild
+      >
         <TouchableOpacity>
           <Text
             style={{
@@ -20,16 +36,17 @@ export default function Details(props: any) {
               fontSize: moderateScale(30),
             }}
           >
-            Episode 1
+            Episode {index + 1}
           </Text>
         </TouchableOpacity>
       </Link>
     );
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: "#282828", flex: 1 }}>
+      <StatusBar animated={true} barStyle="light-content" />
       <FlatList
-        data={[1, 2, 3, 4, 5, 6, 7, 8]}
+        data={data}
         renderItem={renderFileItem}
         keyExtractor={(item) => `${item}`}
         contentContainerStyle={{

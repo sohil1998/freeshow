@@ -1,8 +1,11 @@
 import { View } from "react-native";
 import React, { useRef, useState } from "react";
 import { WebView } from "react-native-webview";
+import { Link, useLocalSearchParams } from "expo-router";
 
 export default function Video() {
+  const params = useLocalSearchParams();
+
   return (
     <View
       style={{
@@ -20,7 +23,7 @@ export default function Video() {
         document.querySelector('.footer-bottom').style.display = 'none'
 
         `}
-        source={{ uri: "https://tellygossips.net/media.php?id=2494000" }}
+        source={{ uri: params.url }}
         nestedScrollEnabled={false}
         allowsFullscreenVideo={true}
         javaScriptEnabled={true}

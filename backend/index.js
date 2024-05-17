@@ -23,7 +23,7 @@ app.use(cors());
 
 app.get("/", (request, response) => {
   console.log(request);
-  return response.status(200).send("Welcome");
+  return response.status(200).send(`Welcome`);
 });
 
 // to add project
